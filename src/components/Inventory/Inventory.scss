@@ -1,0 +1,113 @@
+.inventory {
+  padding: 10px;
+  
+  > .selects {
+    display: flex;
+    justify-content: space-between;
+    column-gap: 1px;
+    border-radius: 20px;
+    width: min-content;
+    overflow: hidden;
+    background-color: var(--container-color);
+    border: 1px solid var(--border-color);
+    margin-bottom: 10px;
+
+    @media screen and (max-width: 480px) {
+      flex-wrap: wrap;
+      width: 100%;
+    }
+    
+    > button {
+      padding: 8px 15px;
+      background-color: transparent;
+      color: var(--text-color);
+      min-width: 100px;
+      white-space: nowrap;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+
+      @media screen and (max-width: 480px) {
+        width: 33%;
+      }
+
+      &.active {
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 20px;
+      }
+    }
+  }
+  > .body {
+    padding: 10px;
+    border-radius: 10px;
+    background-color: var(--container-color);
+    position: relative;
+
+    > .group {
+      display: flex;
+      padding: 15px 5px;
+      column-gap: 10px;
+
+      > .title {
+        writing-mode: vertical-lr;
+        color: var(--text-color);
+        font-size: 1.15em;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+      }
+
+      > .list {
+        flex: 1;
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(auto-fit, 100px);
+        grid-auto-rows: 1fr;
+
+        @media screen and (max-width: 480px) {
+          grid-template-columns: repeat(4, minmax(0, 1fr));       
+        }
+        
+        > .item {
+          width: 100%;
+          height: 100%;
+          border-radius: 20px;
+          border: 2px solid var(--border-color);
+          background-color: var(--body-color);
+          box-shadow: 0 10px 15px rgba(255, 255, 255, 0.075);
+          position: relative;
+
+          > img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+          }
+          > .close {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            border-radius: 50%;
+            background-color: var(--red-color);
+            color: white;
+          }
+        }
+        > button {
+          width: 100%;
+          height: 100%;
+          border: 3px solid var(--text-color);
+          border-radius: 20px;
+          background-color: transparent;
+          color: var(--text-color);
+
+          > * {
+            width: 100%;
+            height: 100%;
+            padding: 20%;
+          }
+        }
+      }
+    }
+  }
+}

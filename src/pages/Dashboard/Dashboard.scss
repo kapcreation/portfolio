@@ -1,0 +1,14 @@
+.dashboard {
+
+  > h1 {
+    padding: 50px;
+    color: var(--title-color);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    > svg {
+      font-size: 3rem;
+    }
+  }
+}
