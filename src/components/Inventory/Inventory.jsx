@@ -3,11 +3,10 @@ import './Inventory.scss'
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';
 import BrushIcon from '@mui/icons-material/Brush';
-import AddItemButton from './AddItemButton/AddItemButton';
 import { Link } from 'react-router-dom';
 import { getInventoryItems } from '../../firebase';
 import Item from './Item';
-import Form from './Form/Form'
+import Form from './Form'
 import AddIcon from '@mui/icons-material/Add';
 
 const Inventory = ({ control }) => {

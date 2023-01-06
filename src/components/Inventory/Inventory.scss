@@ -89,7 +89,7 @@
             top: -5px;
             right: -5px;
             border-radius: 50%;
-            background-color: var(--red-color);
+            background-color: var(--blue-color);
             color: white;
           }
         }
@@ -163,6 +163,10 @@
         background-color: var(--primary-color);
         padding: 10px;
         color: white;
+
+        &.delete {
+          background-color: var(--red-color);
+        }
       }
     }
     > .close {

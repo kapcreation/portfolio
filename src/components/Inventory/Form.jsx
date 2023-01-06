@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
-import './Form.scss'
-import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
-import { addInventoryItem, updateInventoryItem } from '../../../firebase'
+import { addInventoryItem, updateInventoryItem, deleteInventoryItem } from '../../firebase'
 
 const Form = ({ update, onClose, item }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false)
@@ -14,7 +12,7 @@ const Form = ({ update, onClose, item }) => {
     targetUrl: ''
   }
   const [data, setData] = useState(initialData)
-  const [isProcessing, setIsProcessing] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [msg, setMsg] = useState(null)
   
   const passwordInput = useRef(null)
@@ -34,21 +32,21 @@ const Form = ({ update, onClose, item }) => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    setIsProcessing(true)
-    if (isProcessing) return
+    setIsLoading(true)
+    if (isLoading) return
 
     const { file, title, group, category, targetUrl } = data
     
     if ((!item && !file) || !title || !group || !category) {
       console.error('Error: Incomplete data!')
       setMsg('Error: Incomplete data!')
-      setIsProcessing(false)
+      setIsLoading(false)
       return
     }
     if (passwordInput.current.value !== process.env.REACT_APP_ADMIN_PASSWORD) {
       console.error('Error: Wrong password!')
       setMsg('Error: Wrong password!')
-      setIsProcessing(false)
+      setIsLoading(false)
       return
     }
 
@@ -59,12 +57,9 @@ const Form = ({ update, onClose, item }) => {
     : 
     await updateInventoryItem(item, modifiedData)
 
-    clear()
-    
-    setIsProcessing(false)
-
+    clear() 
+    setIsLoading(false)
     update()
-
     close()
   }
 
@@ -81,6 +76,27 @@ const Form = ({ update, onClose, item }) => {
       setData(prev=>({...prev, [e.target.name]: e.target.files[0]})) 
     else 
       setData(prev=>({...prev, [e.target.name]: e.target.value}))
+  }
+
+  const deleteItem = async (e) => {
+    e.preventDefault()
+
+    setIsLoading(true)
+    if (isLoading) return
+
+    if (passwordInput.current.value !== process.env.REACT_APP_ADMIN_PASSWORD) {
+      console.error('Error: Wrong password!')
+      setMsg('Error: Wrong password!')
+      setIsLoading(false)
+      return
+    }
+    
+    await deleteInventoryItem(item.id)
+
+    clear()
+    setIsLoading(false)
+    update()
+    close()
   }
 
   return (
@@ -120,7 +136,15 @@ const Form = ({ update, onClose, item }) => {
           <label htmlFor='passwordInput'>Password</label>
           <input ref={passwordInput} type="text" name="password" id='passwordInput' />
         </div>
-        <button>{!isProcessing ? (!item ? 'Add Item' : 'Update') : (!item ? 'Adding...' : 'Updating...')}</button>
+        {
+          !isLoading ?
+          <>
+            <button className='add'>{!item ? 'Add Item' : 'Update'}</button>
+            {item && <button onClick={deleteItem} className='delete'>Delete item</button>}
+          </>
+          :
+          'Loading...'
+        }
       </form>
       <button onClick={close} className='close'><CloseIcon /></button>
       {msg && msg}

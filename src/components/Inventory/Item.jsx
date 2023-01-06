@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import EditIcon from '@mui/icons-material/Edit';
-import { deleteInventoryItem } from '../../firebase';
 import { Tooltip } from 'react-tooltip'
 import 'react-tooltip/dist/react-tooltip.css'
 
@@ -10,16 +9,6 @@ const Item = ({ data, control, onEdit, update }) => {
   useEffect(() => {
     setIsDeleting(false)
   }, [data])
-  
-
-  const handleDelete = async () => {
-    setIsDeleting(true)
-    if (isDeleting) return
-    
-    await deleteInventoryItem(data.id)
-
-    update()
-  }
 
   const handleEdit = () => {
     onEdit && onEdit()
