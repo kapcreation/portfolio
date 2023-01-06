@@ -5,6 +5,7 @@
   transform: translate(-50%, -100%);
   z-index: var(--z-index-modal);
 
+  pointer-events: none;
   background-color: var(--title-color);
   color: var(--body-color);
   white-space: nowrap;
@@ -34,5 +35,5 @@
 
 [data-tooltip]:hover > .tooltip {
   visibility: visible;
-  opacity: 1;
+  opacity: 0.8;
 }
