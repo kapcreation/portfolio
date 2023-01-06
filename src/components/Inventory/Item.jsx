@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import EditIcon from '@mui/icons-material/Edit';
-import { Tooltip } from 'react-tooltip'
-import 'react-tooltip/dist/react-tooltip.css'
+import Tooltip from '../Tooltip/Tooltip';
 
 const Item = ({ data, control, onEdit, update }) => {
   const [isDeleting, setIsDeleting] = useState(false)
@@ -21,7 +20,7 @@ const Item = ({ data, control, onEdit, update }) => {
   }
 
   return (
-    <a href={data.targetUrl} target='_blank' id={data.id} className='item' style={isDeleting ? { opacity: '0.5' } : {}} onClick={handleClick}>
+    <a data-tooltip href={data.targetUrl} target='_blank' id={data.id} className='item' style={isDeleting ? { opacity: '0.5' } : {}} onClick={handleClick}>
       <img src={data.imgUrl} alt="" />
       {
         control && !isDeleting && 
@@ -29,8 +28,8 @@ const Item = ({ data, control, onEdit, update }) => {
           <EditIcon />
         </button>
       }
-      
-      <Tooltip anchorId={data.id} content={data.title} place="top" className='tooltip' />
+
+      <Tooltip content={data.title} />
     </a>
   )
 }

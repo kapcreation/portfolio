@@ -25,6 +25,9 @@
     --text-color: #b2bac2;
   }
 
+  --z-index-modal: 10;
+
+
   min-height: 100vh;
   background-repeat: no-repeat;
   background-size: contain;
@@ -33,10 +36,5 @@
   .container {
     max-width: 1440px;
     margin: auto;
-  }
-
-  .tooltip {
-    background-color: var(--title-color);
-    color: var(--body-color);
   }
 }
