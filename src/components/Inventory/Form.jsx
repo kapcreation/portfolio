@@ -91,7 +91,7 @@ const Form = ({ update, onClose, item }) => {
       return
     }
     
-    await deleteInventoryItem(item.id)
+    await deleteInventoryItem(item)
 
     clear()
     setIsLoading(false)

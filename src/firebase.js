@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, doc, addDoc, setDoc, deleteDoc, getDocs, query, where } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, uploadBytes, deleteObject, getDownloadURL } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -23,21 +23,24 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
+
 export const addInventoryItem = async (data) => {
   try {
     const { title, group, category, file, targetUrl } = data
-
-    const storageRef = ref(storage, `inventory/${uuidv4()}/${file.name}`);
-
-    await uploadBytes(storageRef, file) 
    
-    await addDoc(collection(db, "inventory"), {
+    const docRef = await addDoc(collection(db, "inventory"), {});
+    
+    const storageRef = ref(storage, `inventory/${docRef.id}/${file.name}`);
+    await uploadBytes(storageRef, file) 
+
+    await setDoc(docRef, {
       title,
       group,
       category,
       imgUrl: await getDownloadURL(storageRef),
       targetUrl
-    });
+    })
+    
   } catch (e) {
     console.error("Error adding document: ", e);
   }
@@ -56,9 +59,11 @@ export const getInventoryItems = async (group) => {
   }
 }
 
-export const deleteInventoryItem = async (id) => {
+export const deleteInventoryItem = async (item) => {
   try {
-    await deleteDoc(doc(db, "inventory/" + id));
+    const storageRef = ref(storage, item.imgUrl);
+    await deleteObject(storageRef)
+    await deleteDoc(doc(db, "inventory/" + item.id));
   } catch (error) {
     console.error(error)
   }
@@ -68,17 +73,26 @@ export const updateInventoryItem = async (item, updateData) => {
   try {
     const { title, group, category, file, targetUrl } = updateData
 
-    const storageRef = ref(storage, item.imgUrl);
+    let imgUrl = item.imgUrl
 
-    file && await uploadBytes(storageRef, file)
+    if (file) {
+      const oldStorageRef = ref(storage, item.imgUrl);
+      await deleteObject(oldStorageRef)
+
+      const storageRef = ref(storage, `inventory/${item.id}/${file.name}`);
+      await uploadBytes(storageRef, file)
+
+      imgUrl = await getDownloadURL(storageRef)
+    }
    
     await setDoc(doc(db, "inventory/" + item.id), {
       title,
       group,
       category,
-      imgUrl: file ? await getDownloadURL(storageRef) : item.imgUrl,
+      imgUrl,
       targetUrl
     });
+
   } catch (error) {
     console.error(error)
   }
