@@ -7,12 +7,16 @@ import AddItemButton from './AddItemButton/AddItemButton';
 import { Link } from 'react-router-dom';
 import { getInventoryItems } from '../../firebase';
 import Item from './Item';
+import Form from './Form/Form'
+import AddIcon from '@mui/icons-material/Add';
 
 const Inventory = ({ control }) => {
   const [skills, setSkills] = useState([])
   const [portfolio, setPortfolio] = useState([])
   const [filter, setFilter] = useState('all')
   const selects = useRef(null)
+  const [formIsOpen, setFormIsOpen] = useState(false)
+  const [itemToEdit, setItemToEdit] = useState(null)
 
   const update = () => {
     getInventoryItems('skill').then(data=> setSkills(data))
@@ -34,6 +38,18 @@ const Inventory = ({ control }) => {
     setFilter(e.target.dataset.value)
   }
 
+  const openForm = (item) => {
+    setItemToEdit(item)
+
+    setFormIsOpen(true)
+  }
+
+  const closeForm = () => {
+    setItemToEdit(null)
+
+    setFormIsOpen(false)
+  }
+
   return (
     <div className="inventory">
       <div ref={selects} className="selects">
@@ -47,23 +63,27 @@ const Inventory = ({ control }) => {
           <div className="title">Skills</div>
           <div className="list">
           {skills?.map((item, i) => {
-            if (item?.category?.includes(filter) || filter === 'all') return <Item data={item} control={control} update={update} key={i} />
+            if (item?.category?.includes(filter) || filter === 'all') 
+            return <Item data={item} control={control} onEdit={()=>openForm(item)} update={update} key={i} />
           })}
 
-            {control && <AddItemButton update={update} />}
+            {control && <button onClick={()=>openForm()}><AddIcon /></button>}
           </div>
         </div>
         <div className="group">
           <div className="title">Works</div>
           <div className="list">
             {portfolio?.map((item, i) => {
-              if (item?.category?.includes(filter) || filter === 'all') return <Item data={item} control={control} update={update} key={i} />
+              if (item?.category?.includes(filter) || filter === 'all') 
+              return <Item data={item} control={control} onEdit={()=>openForm(item)} update={update} key={i} />
             })}
             
-            {control && <AddItemButton update={update} />}
+            {control && <button onClick={()=>openForm()}><AddIcon /></button>}
           </div>
         </div>
       </div>
+
+      {formIsOpen && <Form onClose={closeForm} update={update} item={itemToEdit} />}
     </div>
   )
 }

@@ -16,6 +16,14 @@
   --title-color: #262D4C;
   --text-color: #3e5060;
 
+  &.dark-theme {
+    --body-color: #0A1929;
+    --container-color: #1A2027;
+    --border-color: #132f4c;
+    --title-color: #F3F6F9;
+    --text-color: #b2bac2;
+  }
+
   min-height: 100vh;
   background-repeat: no-repeat;
   background-size: contain;
@@ -26,11 +34,8 @@
     margin: auto;
   }
 
-  &.dark-theme {
-    --body-color: #0A1929;
-    --container-color: #1A2027;
-    --border-color: #132f4c;
-    --title-color: #F3F6F9;
-    --text-color: #b2bac2;
+  .tooltip {
+    background-color: var(--title-color);
+    color: var(--body-color);
   }
 }

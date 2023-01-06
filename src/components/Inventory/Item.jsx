@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import CloseIcon from '@mui/icons-material/Close';
+import EditIcon from '@mui/icons-material/Edit';
 import { deleteInventoryItem } from '../../firebase';
+import { Tooltip } from 'react-tooltip'
+import 'react-tooltip/dist/react-tooltip.css'
 
-const Item = ({ data, control, update }) => {
+const Item = ({ data, control, onEdit, update }) => {
   const [isDeleting, setIsDeleting] = useState(false)
 
   useEffect(() => {
@@ -19,11 +21,23 @@ const Item = ({ data, control, update }) => {
     update()
   }
 
+  const handleEdit = () => {
+    onEdit && onEdit()
+  }
+
   return (
-    <div className='item' style={isDeleting ? { opacity: '0.5' } : {}}>
-      <img src={data.imgUrl} alt="" />
-      {control && !isDeleting && <button className='close' onClick={handleDelete}><CloseIcon className='btn-icon' /></button>}
-    </div>
+    <>
+      <div id={data.id} className='item' style={isDeleting ? { opacity: '0.5' } : {}}>
+        <img src={data.imgUrl} alt="" />
+        {
+          control && !isDeleting && 
+          <button className='close' onClick={handleEdit}>
+            <EditIcon />
+          </button>
+        }
+      </div>
+      <Tooltip anchorId={data.id} content={data.title} place="top" className='tooltip' />
+    </>
   )
 }
 

@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, doc, addDoc, deleteDoc, getDocs, query, where } from "firebase/firestore";
+import { getFirestore, collection, doc, addDoc, setDoc, deleteDoc, getDocs, query, where } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -23,18 +23,16 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-export const addInventoryItem = async (data, password) => {
+export const addInventoryItem = async (data) => {
   try {
-    if (password !== process.env.REACT_APP_ADMIN_PASSWORD) throw new Error('Wrong password!')
-
-    const { group, category, file, targetUrl } = data
+    const { title, group, category, file, targetUrl } = data
 
     const storageRef = ref(storage, `inventory/${uuidv4()}/${file.name}`);
 
-    const uploadedFile = await uploadBytes(storageRef, file) 
-    console.log(uploadedFile)
-
-    const docRef = await addDoc(collection(db, "inventory"), {
+    await uploadBytes(storageRef, file) 
+   
+    await addDoc(collection(db, "inventory"), {
+      title,
       group,
       category,
       imgUrl: await getDownloadURL(storageRef),
@@ -61,6 +59,26 @@ export const getInventoryItems = async (group) => {
 export const deleteInventoryItem = async (id) => {
   try {
     await deleteDoc(doc(db, "inventory/" + id));
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export const updateInventoryItem = async (item, updateData) => {
+  try {
+    const { title, group, category, file, targetUrl } = updateData
+
+    const storageRef = ref(storage, item.imgUrl);
+
+    file && await uploadBytes(storageRef, file)
+   
+    await setDoc(doc(db, "inventory/" + item.id), {
+      title,
+      group,
+      category,
+      imgUrl: file ? await getDownloadURL(storageRef) : item.imgUrl,
+      targetUrl
+    });
   } catch (error) {
     console.error(error)
   }
