@@ -8,6 +8,7 @@ import { getInventoryItems } from '../../firebase';
 import Item from './Item';
 import Form from './Form'
 import AddIcon from '@mui/icons-material/Add';
+import Mark from '../Mark';
 
 const Inventory = ({ control }) => {
   const [skills, setSkills] = useState([])
@@ -16,6 +17,7 @@ const Inventory = ({ control }) => {
   const selects = useRef(null)
   const [formIsOpen, setFormIsOpen] = useState(false)
   const [itemToEdit, setItemToEdit] = useState(null)
+  const [selectMarkOrigin, setSelectMarkOrigin] = useState(null)
 
   const update = () => {
     getInventoryItems('skill').then(data=> setSkills(data))
@@ -27,14 +29,16 @@ const Inventory = ({ control }) => {
   }, [])
 
   const handleSelect = (e) => {
-    if (!e.target.dataset.value) return
+    if (!e.target.dataset.filter) return
+
+    setSelectMarkOrigin(e.target)
 
     for (const element of selects.current.children) {
       element.classList.remove('active')
     }
     
     e.target.classList.add('active')
-    setFilter(e.target.dataset.value)
+    setFilter(e.target.dataset.filter)
   }
 
   const openForm = (item) => {
@@ -52,10 +56,11 @@ const Inventory = ({ control }) => {
   return (
     <div className="inventory">
       <div ref={selects} className="selects">
-        <button onClick={handleSelect} data-value='all' className='active'>All</button>
-        <button onClick={handleSelect} data-value='webdev'><DashboardIcon className='btn-icon' /> Web Dev</button>
-        <button onClick={handleSelect} data-value='gamedev'><VideogameAssetIcon className='btn-icon' /> Game Dev</button>
-        <button onClick={handleSelect} data-value='digiart'><BrushIcon className='btn-icon' /> Digital Art</button>
+        <button onClick={handleSelect} data-filter='all' className='active'>All</button>
+        <button onClick={handleSelect} data-filter='webdev'><DashboardIcon className='btn-icon' /> Web Dev</button>
+        <button onClick={handleSelect} data-filter='gamedev'><VideogameAssetIcon className='btn-icon' /> Game Dev</button>
+        
+        <Mark origin={selectMarkOrigin} />
       </div>
       <div className="body">
         <div className="group">
