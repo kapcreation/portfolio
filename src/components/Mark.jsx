@@ -1,16 +1,27 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import useWindowSize from '../hooks/useWindowSize'
 
-const Mark = ({ origin }) => {
+const Mark = ({ parent }) => {
   const element = useRef(null)
+  const [anchor, setAnchor] = useState(null)
   const windowSize = useWindowSize()
 
   useEffect(() => {
-    if (origin) setTransform()
-  }, [origin])
+    if (parent) {
+      for (let btn of parent.children) {
+        btn.onclick = (e)=>setAnchor(e.target)
+      }
+  
+      setAnchor(parent.children[0])
+    }
+  }, [parent]);
 
   useEffect(() => {
-    if (origin) {
+    if (anchor) setTransform()
+  }, [anchor])
+
+  useEffect(() => {
+    if (anchor) {
       const initialTransition = element.current.style.transition
       element.current.style.transition = '0s'
       setTransform()
@@ -19,10 +30,10 @@ const Mark = ({ origin }) => {
   }, [windowSize])
 
   const setTransform = () => {
-    element.current.style.left = `${origin.offsetLeft}px`
-    element.current.style.top = `${origin.offsetTop}px`
-    element.current.style.width = `${origin.offsetWidth}px`
-    element.current.style.height = `${origin.offsetHeight}px`
+    element.current.style.left = `${anchor.offsetLeft}px`
+    element.current.style.top = `${anchor.offsetTop}px`
+    element.current.style.width = `${anchor.offsetWidth}px`
+    element.current.style.height = `${anchor.offsetHeight}px`
   }
   
   return (

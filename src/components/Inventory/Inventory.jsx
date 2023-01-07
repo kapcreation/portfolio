@@ -17,7 +17,6 @@ const Inventory = ({ control }) => {
   const selects = useRef(null)
   const [formIsOpen, setFormIsOpen] = useState(false)
   const [itemToEdit, setItemToEdit] = useState(null)
-  const [selectMarkOrigin, setSelectMarkOrigin] = useState(null)
 
   const update = () => {
     getInventoryItems('skill').then(data=> setSkills(data))
@@ -30,8 +29,6 @@ const Inventory = ({ control }) => {
 
   const handleSelect = (e) => {
     if (!e.target.dataset.filter) return
-
-    setSelectMarkOrigin(e.target)
 
     for (const element of selects.current.children) {
       element.classList.remove('active')
@@ -60,7 +57,7 @@ const Inventory = ({ control }) => {
         <button onClick={handleSelect} data-filter='webdev'><DashboardIcon className='btn-icon' /> Web Dev</button>
         <button onClick={handleSelect} data-filter='gamedev'><VideogameAssetIcon className='btn-icon' /> Game Dev</button>
         
-        <Mark origin={selectMarkOrigin} />
+        <Mark parent={selects.current} />
       </div>
       <div className="body">
         <div className="group">

@@ -5,7 +5,7 @@ import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import { ThemeContext } from '../../context/themeContext';
 
-const Header = () => {
+const Header = ({ setFormIsOpen }) => {
   const { toggleTheme } = useContext(ThemeContext)
 
   return (
@@ -18,7 +18,7 @@ const Header = () => {
         <p className='info'>Web developer | Game developer</p>
         <div className="btns">
           <button>Download CV</button>
-          <button>Contact</button>
+          <button onClick={()=>setFormIsOpen(true)}>Contact</button>
         </div>
       </div>
       
