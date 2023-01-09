@@ -27,8 +27,9 @@
 
   --z-index-modal: 10;
 
-
-  min-height: 100vh;
+  position: relative;
+  height: 100vh;
+  overflow-y: auto;
   background-repeat: no-repeat;
   background-size: contain;
   background-color: var(--body-color);
@@ -52,4 +53,21 @@
       transform: translate(-50%, -50%);
     }
   }
+
+    
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    background-color: var(--container-color)
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--gray-color);
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: var(--text-color);
+  }
+
 }

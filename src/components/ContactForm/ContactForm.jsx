@@ -1,37 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './ContactForm.scss'
 import CloseIcon from '@mui/icons-material/Close';
+import { useForm } from '@formspree/react';
 
-const ContactForm = ({ onClose }) => {
-
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
-
-  const { name, email, message } = formData;
-
-  const handleChange = event => {
-    setFormData({
-      ...formData,
-      [event.target.name]: event.target.value
-    });
-  };
-
-  const handleSubmit = event => {
-    event.preventDefault();
-    // Send form data to server or email here
-    setFormData({
-      name: '',
-      email: '',
-      message: ''
-    });
-  };
+const ContactForm = ({ onClose, onSubmit }) => {
+  const [state, handleSubmit] = useForm('xgebepzn', { 
+    data: { subject: 'KAP Portfolio - New contact form submission' }
+  })
 
   const handleClose = () => {
     onClose && onClose()
   }
+
+  useEffect(() => {
+    if (state.succeeded) {
+      onSubmit && onSubmit()
+      handleClose()
+    }
+  }, [state])
 
   return (
     <div className='contact-form'>
@@ -43,8 +29,6 @@ const ContactForm = ({ onClose }) => {
             type="text"
             name="name"
             id='nameInput'
-            value={name}
-            onChange={handleChange}
             required
           />
         </div>
@@ -54,8 +38,6 @@ const ContactForm = ({ onClose }) => {
             type="email"
             name="email"
             id='emailInput'
-            value={email}
-            onChange={handleChange}
             required
           />
         </div>
@@ -65,12 +47,10 @@ const ContactForm = ({ onClose }) => {
             rows={8}
             name="message"
             id='messageInput'
-            value={message}
-            onChange={handleChange}
             required
           />
         </div>
-        <button type="submit">Send</button>
+        <button type="submit" disabled={state.submitting}>{!state.submitting ? 'Send' : 'Sending...'}</button>
       </form>
 
       <button onClick={handleClose} className='close'>
