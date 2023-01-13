@@ -9,8 +9,11 @@ import Item from './Item';
 import Form from './Form'
 import AddIcon from '@mui/icons-material/Add';
 import Mark from '../Mark';
+import useAuth from '../../hooks/useAuth';
 
 const Inventory = ({ control }) => {
+  const { currentUser } = useAuth()
+  
   const [skills, setSkills] = useState([])
   const [portfolio, setPortfolio] = useState([])
   const [filter, setFilter] = useState('all')
@@ -18,13 +21,14 @@ const Inventory = ({ control }) => {
   const [formIsOpen, setFormIsOpen] = useState(false)
   const [itemToEdit, setItemToEdit] = useState(null)
 
-  const update = () => {
-    getInventoryItems('skill').then(data=> setSkills(data))
-    getInventoryItems('portfolio').then(data=> setPortfolio(data))
-  }
+  useEffect(() => {
+    const unsubscribe = getInventoryItems('skill', setSkills)
+    return unsubscribe
+  }, [])
 
   useEffect(() => {
-    update()
+    const unsubscribe = getInventoryItems('portfolio', setPortfolio)
+    return unsubscribe
   }, [])
 
   const handleSelect = (e) => {
@@ -65,7 +69,7 @@ const Inventory = ({ control }) => {
           <div className="list">
           {skills?.map((item, i) => {
             if (item?.category?.includes(filter) || filter === 'all') 
-            return <Item data={item} control={control} onEdit={()=>openForm(item)} update={update} key={i} />
+            return <Item data={item} control={control} onEdit={()=>openForm(item)} key={i} />
           })}
 
             {control && <button onClick={()=>openForm()}><AddIcon /></button>}
@@ -76,7 +80,7 @@ const Inventory = ({ control }) => {
           <div className="list">
             {portfolio?.map((item, i) => {
               if (item?.category?.includes(filter) || filter === 'all') 
-              return <Item data={item} control={control} onEdit={()=>openForm(item)} update={update} key={i} />
+              return <Item data={item} control={control} onEdit={()=>openForm(item)} key={i} />
             })}
             
             {control && <button onClick={()=>openForm()}><AddIcon /></button>}
@@ -84,7 +88,7 @@ const Inventory = ({ control }) => {
         </div>
       </div>
 
-      {formIsOpen && <Form onClose={closeForm} update={update} item={itemToEdit} />}
+      {formIsOpen && <Form onClose={closeForm} item={itemToEdit} />}
     </div>
   )
 }

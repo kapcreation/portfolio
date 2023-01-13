@@ -6,13 +6,24 @@ import {
   RouterProvider,
   Route,
   Link,
+  Navigate,
+  Outlet,
 } from "react-router-dom";
 import Dashboard from './pages/Dashboard/Dashboard';
 import { useContext, useRef } from 'react';
 import { ThemeContext } from './context/themeContext';
+import useAuth from './hooks/useAuth';
+import Login from './pages/Login/Login';
 
 function App() {
+  const { currentUser } = useAuth()
   const { themeRef } = useContext(ThemeContext)
+
+  const ProtectedRoute = ({ children }) => {
+    if(!currentUser) return <Navigate to='/login' />
+
+    return children
+  }
 
   const router = createBrowserRouter([
     {
@@ -20,8 +31,12 @@ function App() {
       element: <Home />,
     },
     {
-      path: "dashboard",
-      element: <Dashboard />,
+      path: "/dashboard",
+      element: <ProtectedRoute><Dashboard /></ProtectedRoute>,
+    },
+    {
+      path: "/login",
+      element: <Login />,
     },
   ]);
 

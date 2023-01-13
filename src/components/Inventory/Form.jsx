@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import { addInventoryItem, updateInventoryItem, deleteInventoryItem } from '../../firebase'
 
-const Form = ({ update, onClose, item }) => {
+const Form = ({ onClose, item }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const initialData = {
     file: null,
@@ -59,7 +59,6 @@ const Form = ({ update, onClose, item }) => {
 
     clear() 
     setIsLoading(false)
-    update()
     close()
   }
 
@@ -95,7 +94,6 @@ const Form = ({ update, onClose, item }) => {
 
     clear()
     setIsLoading(false)
-    update()
     close()
   }
 

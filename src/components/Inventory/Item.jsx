@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import EditIcon from '@mui/icons-material/Edit';
 import Tooltip from '../Tooltip/Tooltip';
 
-const Item = ({ data, control, onEdit, update }) => {
+const Item = ({ data, control, onEdit }) => {
   const [isDeleting, setIsDeleting] = useState(false)
   
   useEffect(() => {
@@ -10,7 +10,7 @@ const Item = ({ data, control, onEdit, update }) => {
   }, [data])
 
   const handleEdit = (e) => {
-    e.stopPropagation()
+    e.preventDefault()
     
     onEdit && onEdit()
   }
@@ -25,7 +25,7 @@ const Item = ({ data, control, onEdit, update }) => {
       {
         control && !isDeleting && 
         <button className='close' onClick={handleEdit}>
-          <EditIcon />
+          <EditIcon className='btn-icon' />
         </button>
       }
 

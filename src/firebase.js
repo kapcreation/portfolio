@@ -1,8 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, doc, addDoc, setDoc, deleteDoc, getDocs, query, where } from "firebase/firestore";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
+import { getFirestore, collection, doc, addDoc, setDoc, deleteDoc, getDocs, query, where, onSnapshot } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, deleteObject, getDownloadURL } from "firebase/storage";
-import { v4 as uuidv4 } from 'uuid';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -20,9 +20,23 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
+export const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 const db = getFirestore(app);
 const storage = getStorage(app);
 
+export const loginWithGoogle = async () => {
+  try {
+    const { user } = await signInWithPopup(auth, provider) 
+    return user
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export const logout = async () => {
+  await signOut(auth)
+}
 
 export const addInventoryItem = async (data) => {
   try {
@@ -46,17 +60,15 @@ export const addInventoryItem = async (data) => {
   }
 }
 
-export const getInventoryItems = async (group) => {
-  try {
-    const q = query(collection(db, "inventory"), where("group", "==", group));
+export const getInventoryItems = (group, callback) => { 
 
-    const querySnapshot = await getDocs(q);
+  const q = query(collection(db, "inventory"), where("group", "==", group));
+
+  return onSnapshot(q, (querySnapshot) => {
     const data = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+    callback(data)
+  });
 
-    return data
-  } catch (error) {
-    console.error(error)
-  }
 }
 
 export const deleteInventoryItem = async (item) => {
