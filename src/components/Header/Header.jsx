@@ -4,6 +4,7 @@ import logo from '../../assets/logo.png'
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import { ThemeContext } from '../../context/themeContext';
+import Typewriter from '../Typewriter'
 
 const Header = ({ onDownloadCv, onContact }) => {
   const { toggleTheme } = useContext(ThemeContext)
@@ -15,7 +16,9 @@ const Header = ({ onDownloadCv, onContact }) => {
       </div>
       <div className='body'>
         <h1 className='title'>Hi! I'm <span>KAP</span>👋</h1>
-        <p className='info'>Web developer | Game developer</p>
+        <p className='info'>
+          <Typewriter text='Web developer | Game developer' />
+        </p>
         <div className="btns">
           <button onClick={onDownloadCv}>Download CV</button>
           <button onClick={onContact}>Contact</button>

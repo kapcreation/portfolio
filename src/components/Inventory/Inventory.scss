@@ -1,6 +1,12 @@
 .inventory {
   padding: 10px;
   
+  > .title {
+    color: var(--text-color);
+    padding-left: 10px;
+    margin-bottom: 5px;
+  }
+
   > .selects {
     display: flex;
     justify-content: space-between;

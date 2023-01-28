@@ -56,6 +56,7 @@ const Inventory = ({ control }) => {
 
   return (
     <div className="inventory">
+      <p className='title'>Skills & Works</p>
       <div ref={selects} className="selects">
         <button onClick={handleSelect} data-filter='all' className='active'>All</button>
         <button onClick={handleSelect} data-filter='webdev'><DashboardIcon className='btn-icon' /> Web Dev</button>
