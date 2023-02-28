@@ -12,7 +12,7 @@ const Home = () => {
 
   return (
     <div className='home'>
-      <Header onContact={()=>setFormIsOpen(true)} onDownloadCv={()=>toast('CV unavailable')} />
+      <Header onContact={()=>setFormIsOpen(true)} />
       <Inventory />
       {formIsOpen && <ContactForm isOpen={formIsOpen} onClose={()=>setFormIsOpen(false)} onSubmit={()=>notify()} />}
       <ToastContainer />
